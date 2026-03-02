@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#034aad">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>LM Consig</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #034aad;
+        }
+        
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #034aad 0%, #023a8a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        
+        #loading.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            background: white;
+        }
+        
+        iframe.loaded {
+            display: block;
+        }
+        
+        .error-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .error-container.show {
+            display: flex;
+        }
+        
+        .error-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .retry-btn {
+            background: #034aad;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .retry-btn:hover {
+            background: #023a8a;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <img src="icon-192.png" alt="Logo" class="logo" id="logo">
+        <div class="spinner"></div>
+        <p class="loading-text">Carregando...</p>
+    </div>
+    
+    <div class="error-container" id="errorContainer">
+        <div class="error-icon">⚠️</div>
+        <h2 class="error-title">Ops! Algo deu errado</h2>
+        <p class="error-message">Não foi possível carregar o aplicativo. Verifique sua conexão com a internet e tente novamente.</p>
+        <button class="retry-btn" onclick="location.reload()">🔄 Tentar Novamente</button>
+    </div>
+    
+    <iframe id="appFrame" src="" allow="camera; microphone; geolocation"></iframe>
+    
+    <script>
+        const APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1O5IXNRp6FOpQlsoUclx_4rn4HHIslnBIEpTCKJMpv0ESS0mpNg3DcJ6p1RFE8Q51/exec';
+        
+        const iframe = document.getElementById('appFrame');
+        const loading = document.getElementById('loading');
+        const errorContainer = document.getElementById('errorContainer');
+        let loadTimeout;
+        
+        function loadApp() {
+            iframe.src = APP_SCRIPT_URL;
+            loadTimeout = setTimeout(() => {
+                showError();
+            }, 15000);
+        }
+        
+        iframe.onload = function() {
+            clearTimeout(loadTimeout);
+            setTimeout(() => {
+                loading.classList.add('hide');
+                iframe.classList.add('loaded');
+            }, 800);
+        };
+        
+        iframe.onerror = function() {
+            showError();
+        };
+        
+        function showError() {
+            clearTimeout(loadTimeout);
+            loading.style.display = 'none';
+            errorContainer.classList.add('show');
+        }
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registrado'))
+                .catch(err => console.log('Erro no Service Worker:', err));
+        }
+        
+        loadApp();
+        
+        window.addEventListener('online', () => {
+            if (errorContainer.classList.contains('show')) {
+                location.reload();
+            }
+        });
+        
+        window.addEventListener('offline', () => {
+            showError();
+        });
+    </script>
+</body>
+</html>
