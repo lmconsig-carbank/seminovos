@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#034AAD">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>LM Consig</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(160deg, #034AAD 0%, #0a2f6e 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 40px 30px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            margin: 0 auto 22px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            display: block;
+            background: rgba(255,255,255,0.1);
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 36px;
+            line-height: 1.5;
+        }
+
+        .open-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: white;
+            color: #034AAD;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+
+        .open-btn:active {
+            transform: scale(0.97);
+        }
+
+        .open-btn svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 28px 0;
+            opacity: 0.4;
+            font-size: 13px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: white;
+        }
+
+        .info-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            opacity: 0.75;
+            margin-bottom: 10px;
+        }
+
+        .info-list li span.dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            flex-shrink: 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img src="icon-192.png" alt="LM Consig" class="logo" id="logo">
+
+        <h1>LM Consig</h1>
+        <p class="subtitle">Seu app está instalado e pronto para uso!</p>
+
+        <a class="open-btn" href="https://script.google.com/macros/s/AKfycbw1O5IXNRp6FOpQlsoUclx_4rn4HHIslnBIEpTCKJMpv0ESS0mpNg3DcJ6p1RFE8Q51/exec" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            Acessar o Sistema
+        </a>
+
+        <div class="divider">informações</div>
+
+        <ul class="info-list">
+            <li><span class="dot"></span> Toque em "Acessar o Sistema" para abrir o app</li>
+            <li><span class="dot"></span> O sistema abrirá no seu navegador</li>
+            <li><span class="dot"></span> Use este ícone para acesso rápido sempre que precisar</li>
+        </ul>
+    </div>
+
+    <p class="footer">LM Consig &copy; 2025</p>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+        const logo = document.getElementById('logo');
+        logo.onerror = () => { logo.style.display = 'none'; };
+    </script>
+</body>
+</html>
